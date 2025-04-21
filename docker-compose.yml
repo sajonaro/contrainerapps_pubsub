@@ -1,0 +1,35 @@
+---
+
+include: 
+  - ./infra-docker-compose.yml
+
+services:
+
+  publisher:
+    build:
+      context: ./publisher
+      dockerfile: Dockerfile
+    
+  publisher_dapr:
+    image: ${DAPR_IMAGE}
+    command: ./daprd -app-id publisher -app-port ${RECEIVER_PORT} --log-level debug  --resources-path /dapr/pubsub
+    volumes:
+      - ./dapr_components:/dapr      
+    network_mode: "service:publisher"
+
+
+  subscriber:
+    build:
+      context: ./subscriber
+      dockerfile: Dockerfile
+    ports:
+      - "6002:8080"  
+
+  subscriber_dapr:
+    image: ${DAPR_IMAGE}
+    command: ./daprd -app-id subscriber  --log-level debug --app-port 6002 --dapr-http-port 3602 --dapr-grpc-port 60002 --resources-path /dapr/pubsub     
+    volumes:
+      - ./dapr_components:/dapr 
+    depends_on:
+      - subscriber
+    network_mode: "service:subscriber"
