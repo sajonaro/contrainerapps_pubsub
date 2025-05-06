@@ -1,8 +1,6 @@
+FROM eclipse-temurin:23
 
-FROM openjdk:17-jdk-slim 
 WORKDIR /app 
-COPY . . 
-RUN apt-get update && apt-get install -y maven
-RUN mvn clean install
+COPY ./target/dapr-pubsub-subscriber-*.jar /app/app.jar
 
-CMD ["mvn", "-X", "spring-boot:run"]
+CMD exec java $([ "$DEBUG_ON" = "yes" ] && echo -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=0.0.0.0:5005) -jar /app/app.jar

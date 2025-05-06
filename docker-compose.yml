@@ -6,30 +6,23 @@ include:
 services:
 
   publisher:
-    build:
-      context: ./publisher
-      dockerfile: Dockerfile
-    
+    build: ./publisher
+    environment:
+      DEBUG_ON: no
   publisher_dapr:
-    image: ${DAPR_IMAGE}
-    command: ./daprd -app-id publisher -app-port ${RECEIVER_PORT} --log-level debug  --resources-path /dapr/pubsub
-    volumes:
-      - ./dapr_components:/dapr      
+    build: ./dapr
+    command: /daprd -app-id publisher -app-port ${RECEIVER_PORT} --log-level debug --resources-path /components
     network_mode: "service:publisher"
-
+    restart: always
 
   subscriber:
-    build:
-      context: ./subscriber
-      dockerfile: Dockerfile
+    build: ./subscriber
+    environment:
+      DEBUG_ON: no
     ports:
-      - "6002:8080"  
-
+      - "6002:8080"
   subscriber_dapr:
-    image: ${DAPR_IMAGE}
-    command: ./daprd -app-id subscriber  --log-level debug --app-port 6002 --dapr-http-port 3602 --dapr-grpc-port 60002 --resources-path /dapr/pubsub     
-    volumes:
-      - ./dapr_components:/dapr 
-    depends_on:
-      - subscriber
+    build: ./dapr
+    command: /daprd -app-id subscriber --log-level debug --app-port 8080 --resources-path /components
     network_mode: "service:subscriber"
+    restart: always

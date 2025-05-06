@@ -2,7 +2,6 @@
 services:
 
   redis:
-    container_name: "redis_service"
     image: "redis/redis-stack:latest"
     # command: ["redis-server", "/usr/local/etc/redis/redis.conf"]
     ports:

@@ -1,8 +1,6 @@
+FROM eclipse-temurin:23
 
-FROM adoptopenjdk/openjdk11 AS build 
 WORKDIR /app 
-COPY . . 
-RUN apt-get update && apt-get install -y maven
-RUN mvn clean package
+COPY ./target/dapr-pubsub-publisher-*.jar /app/app.jar
 
-CMD ["mvn", "-X", "exec:java", "-Dexec.mainClass=PublisherService"]
+CMD exec java $([ "$DEBUG_ON" = "yes" ] && echo -agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=0.0.0.0:5005) -jar /app/app.jar
