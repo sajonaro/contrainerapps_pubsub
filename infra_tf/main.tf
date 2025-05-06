@@ -122,4 +122,5 @@ resource "azurerm_storage_account" "sa" {
 # Create a function app
 resource "azurerm_function_app" "fa" {
   name                       = "msactiondaprfunc"
-  resource_group_name        = azur
+  resource_group_name        = azurerm_resource_group.aks.name
+}
