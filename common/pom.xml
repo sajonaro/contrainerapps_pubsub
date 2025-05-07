@@ -1,0 +1,19 @@
+<project >
+  	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.service</groupId>
+		<artifactId>dapr-pubsub-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+  	<artifactId>dapr-pubsub-common</artifactId>
+
+	<dependencies>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
+	</dependencies>
+
+</project>
